@@ -1,0 +1,130 @@
+RETAIL SALES & CUSTOMER ANALYTICS
+PROJECT ASSUMPTIONS AND BUSINESS RULES
+============================================================
+
+Project: Retail Sales & Customer Analytics Using SQL
+Dataset: Assignment-2 – Retail Analytics
+Database Platform: PostgreSQL
+
+1. PURPOSE AND SCOPE
+--------------------
+This document records the business rules and analytical assumptions used
+while solving the SQL questions in this project. These rules help keep
+revenue calculations, order classifications, and customer/product analyses
+consistent across queries.
+
+The dataset contains six tables:
+- Customers
+- Products
+- Employees
+- Orders
+- Order_Items
+- Returns
+
+2. REVENUE CALCULATION RULES
+----------------------------
+2.1 Gross Line-Item Value
+Gross value is calculated before applying any discount:
+
+    Gross Value = Quantity × Unit Price at Sale
+
+2.2 Net Line-Item Value
+Net value is calculated after applying the line-item discount:
+
+    Net Value = Quantity × Unit Price at Sale × (1 − Discount Rate)
+
+2.3 Revenue Eligibility
+Unless a question explicitly states otherwise, revenue calculations include
+only orders whose order_status is 'Delivered'.
+
+2.4 Returned and Cancelled Orders
+Orders with status 'Returned' or 'Cancelled' are not included in delivered
+revenue. Return-related questions may use the Returns table and the gross
+value of the returned order items when specifically requested.
+
+3. ORDER AND CUSTOMER ANALYSIS
+------------------------------
+3.1 Delivered-Order Counts
+When a question asks for delivered orders, count only orders with
+order_status = 'Delivered'.
+
+3.2 Customers With No Delivered Orders
+For questions requiring all customers, customers with zero delivered orders
+must remain in the results. A LEFT JOIN or an equivalent approach can be
+used where appropriate.
+
+3.3 Repeat Customers
+A repeat customer is a customer who has placed at least two delivered
+orders, as specified in the assignment.
+
+3.4 Customer Net Spend
+Customer net spend is calculated from the net value of order items belonging
+to delivered orders, using the discount-adjusted line-item formula above.
+
+4. PRODUCT AND STOCK ANALYSIS
+-----------------------------
+4.1 Product Revenue
+Product revenue is based on the net value of order items from delivered
+orders, unless a question specifies a different value.
+
+4.2 Products Without Delivered Sales
+Products with no delivered sales should remain eligible for the product
+ranking question and should be represented with zero revenue.
+
+4.3 Stock Classification
+Products are classified using the assignment's thresholds:
+- Low Stock: stock_quantity < 20
+- Moderate Stock: stock_quantity between 20 and 40, inclusive
+- High Stock: stock_quantity > 40
+
+5. MONTHLY REVENUE AND RUNNING TOTALS
+------------------------------------
+Monthly order counts and revenue are grouped by year and month. Results are
+sorted in chronological order. Running totals accumulate monthly delivered
+net revenue from the earliest month to the latest month in the result set.
+
+6. EMPLOYEE ORDER ACTIVITY
+--------------------------
+For the conditional aggregation question, delivered, returned, and cancelled
+orders are counted separately by status. Employees with no orders must also
+be included in the output.
+
+7. CUSTOMER REVENUE COMPARISON (QUESTION 14)
+--------------------------------------------
+The assignment asks for customers whose net revenue is above the average
+customer net revenue and requires the scope of the average to be stated.
+
+Assumption used in this project:
+The average is calculated across customers with delivered purchases only.
+Customers without delivered purchases are excluded from this average because
+their delivered net revenue is not included in the comparison population.
+
+8. TOP-CUSTOMER CONTRIBUTION
+----------------------------
+For the top-three-customer analysis, customer net spend is calculated from
+delivered orders after discounts. Each customer's percentage contribution
+is calculated against total delivered net revenue.
+
+9. DATA AND IMPLEMENTATION NOTES
+--------------------------------
+- The supplied dataset and table structure are used for this assignment.
+- The project focuses on writing SQL queries; database/table creation and
+  data entry are not assessed tasks in the assignment brief.
+- The assumptions above are applied only where needed to interpret the
+  questions consistently.
+- Where a question specifies its own calculation or inclusion rule, that
+  question-specific instruction takes precedence.
+
+10. PROJECT TABLES
+------------------
+Customers    : Customer details, location, and signup date.
+Products     : Product category, current price, and stock quantity.
+Employees    : Employee details, branch city, and monthly salary.
+Orders       : Order dates, customer/employee assignments, status, and
+               payment method.
+Order_Items  : Products, quantities, sale-time prices, and discount rates.
+Returns      : Return dates and reasons for returned orders.
+
+------------------------------------------------------------
+Prepared for: Retail Sales & Customer Analytics SQL Project
+Author: Digpal Singh
